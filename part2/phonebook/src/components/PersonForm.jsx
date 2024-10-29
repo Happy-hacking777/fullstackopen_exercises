@@ -1,4 +1,4 @@
-const PersonForm = ({ persons, setPersons, newName, setNewName, newNumber, setNewNumber, personService }) => {
+const PersonForm = ({ persons, setPersons, newName, setNewName, newNumber, setNewNumber, personService, setUpdateMessage }) => {
 
   const addName = (event) => {
     event.preventDefault();
@@ -20,6 +20,9 @@ const PersonForm = ({ persons, setPersons, newName, setNewName, newNumber, setNe
           .then(returnedPerson => {
             // Update the state with the new number for the existing person
             setPersons(persons.map(p => (p.id !== existingPerson.id ? p : returnedPerson)));
+            setUpdateMessage(`Updated ${returnedPerson.name}`);
+                        setTimeout(() => setUpdateMessage(null), 5000);
+                    
           })
           .catch(error => {
             alert(`Failed to update the number for ${existingPerson.name}`);
@@ -41,11 +44,14 @@ const PersonForm = ({ persons, setPersons, newName, setNewName, newNumber, setNe
         .create(newPerson)
         .then(returnedPerson => {
           setPersons(persons.concat(returnedPerson));
+          setUpdateMessage(`Added ${returnedPerson.name}`);
+                    setTimeout(() => setUpdateMessage(null), 5000);
         })
         .catch(error => {
           console.error("Error adding person:", error);
         });
     }
+   
 
     // Clear the input fields after either adding or attempting to update
     setNewName('');
